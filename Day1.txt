@@ -1,0 +1,53 @@
+Stock Exchange Project - 
+
+Market - whenever we trade, we swap one asset for another (convert karte hai ek asset ko dusre asset mai)
+base asset - Stock
+quote asset - INR/USD
+ETH-BTC (Combination of two markets)
+
+ye backpack Exchange website se padh rhe hai 
+1. Current price
+2. Order book - (ye frequently change hoti rehti hai)
+Buyer - Bid
+Seller - Ask 
+yahan pe ask or bid se Order book maintain rehta hai 
+
+Limit order - jo Current price hai na us price pe quantity nhi karedni hai usse alag price pe khardini hai (niche wale prices pe hi) jab voh alag wala price current price aa jayega tab hi buy ho payega  
+Market order - best price ya phir 2-2 prices pe le sakta hai quantity, jaise agar 100 quantity hai toh voh 30 alag se le rha hai or baki ke alag price pe le rha hai toh ye hota hai Market price
+
+Trade tab hoga jab hoga jab bid or ask same ho, or trade section mai hamara saari history aa jati hai trades ki 
+
+green, red candle = 
+opening price se agar closing price jyada hai toh green candle
+baki agar opening price jyada hai toh red candle hogi
+
+or ek upar patli si line hoti hai or ek niche patli si line hoti hai 
+upar wali line batati hai maximum price us din ka 
+niche wali line batati hai us din ka minimum price 
+
+Market makers - ye hi liquidity manage karte hai, buyer or seller yahi lake dete hai, inke pass money ka saara management hota hai basically, stock ka owner hi market makers ko contact karta hai ki hamare stock ki liquidity badhane ke liye 
+order book mai jitne ache buyers or sellers honge utne ache liquidity hogi 
+jinki liquidity kaam hoti hai unke stocks nhi bechna chahiye, voh stocks ache nhi hote hai 
+
+# Every order is a limit order - ?
+for e.g. jaise ki 4 log garh bech rhe hai or same jagah ke hai or bilkul same garh hai toh agar ek 1cr mai bech rha hai or ek 1.5 mai bech rha hai or ek 2cr mai bech rha hai or ek 8cr mai, or hamare pass hai total 8cr toh phir sabse acha toh ye rahega na ki mai 6cr mai baki prices mai 4 garh le lun, par agar bakiyo ne apne prices hata liye or sirf 8cr wala rhe gya toh, toh mera market price wala toh mereko 8cr wala de dega isse toh nuksaan ho jayega, isi voh ek already limit laga deta hai jisse stocks maintain rehte hai or lagbhag by default limit hamara 100 rehta hai 
+hamara market order bhi ek limit order hi hota hai, jab bhi hum market order lagate hai toh voh platform ek limit laga deta hai is price se upar ka nhi lena hai or isi ko quoteOrder bolte hai 
+
+Upper circuit - koi sellers hi nhi bacha 
+Lower circuit - koi buyer hi nhi bacha 
+
+ek ase banda hota hai jiske pass bahut paise hota hai or voh saare stocks kharid leta hai or isko shyd se "wave" bolte hai or isse hamare khud ka market kam ho jata hai 
+
+Binance api ka use karenge hum kyuki isi ke api se stocks website ke api bane hai, unke bhi apis same hai 
+hum Binance ka same structure rakhenge schema se leke response tak sab kuch 
+
+order book ka data hamara in memory mai store hota hai kyuki trading ko bilkul seconds mai karvana hota hai hai, agar jaise mujhe ek stock buy karna hai or phir voh jake mere stock database se match karke la rha hai, itne mai toh bahut time lag jayega or phir traffic sa create ho jayega, isliye ise in-memory store karte hai 
+
+Difficulties kya kya hai - 
+1 - Scalability (Horizontal Scaling nhi kar payenge) kyuki hum apne order books ko in-memory store kar rhe hai 
+order book ki process hi alag hi hota hai mtlb main server se different hota hai or ye single thread ke way mai run hota hai or ye process hamara node.js mai ban sakta hai or rest se bhi bna sakte hai, isko ase alag se run karne se hum horizontal scaling kar sakte hai or Scalability increase kar sakte hai 
+2 - Data Crashing ki dikkat hoti hai - par jaise agar data crash ho gya or order book process mai saara data chala gya toh jo queue se order book process hamara data le rha tha, usi queue se vapis restore kar lega, mtlb us queue mai hamara data secure rahega 
+
+Hamare project ka architecture - 
+hamare main server or order book ki process ko queue connect karega 
+browser se toh pehle api se request karenge phir voh jaise order kar rha hai buy ya sell ka toh ek order id ban gyi hai hamare api server mai, voh order id hamara queue pe gya, phir queue se order book ka process us order ko nikal lega phir match karke jitne sell ya buy karne ka kaam hoga voh kar dega or baki cheejen jo pending rahe gyi usko phir alag queue mai rakhega, for e.g. pending stocks vagera phir jo ye queue bana jismai hamara updated data hai, us queue mai se web socket data ko uthayega or voh data phir browser mai jake show hoga, isi vajah se bhi hamen constantly updated data browser pe show hota hai. or jo ye hamara queue hai jismai updated data store tha iska data phir hum database mai bhi store karva sakte hai

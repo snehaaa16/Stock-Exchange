@@ -1,0 +1,76 @@
+Topic 1 => PUB/SUB 
+
+Publisher and subscriber design pattern which we are used for real-time updates, communication between multiple component in 
+microservice architecture without known each other or having any direct connection.
+
+Backend architecture
+1.monolithic architecture -> ek hi server pr sare components hote hai . communicate krana easy hota hai. disadvantage = scaling 
+agr bhut sari request ek server pr ari ai toh server pr load pdta hai hum isme kisi particular component ko scale nhi kr skte 
+hume pure server ko scale krna pdega
+
+2. microservice architecture -> hr server alg alg jgah chlra hai toh agr kisi chiz ko scale krna hai toh particular component ko 
+scale kr skte hai 
+
+abh microservice mai agr hume alg alg server ko connect krana hai toh humare pass 3 tarike hai 
+example -> user ko ml service k sth hume interact krana hai 
+(i) api call krdoh 
+(ii) socket
+(iii) pub/sub 
+
+iss image mai abh yeh hora hai ki isme bhut saare users hai unko subscriber khte hai ek channel hota hai ek radio station hai vo Publisher hai 
+Publisher abh song bhjega channel ko channel pr jo current subscriber honge unko miljega
+
+
+iss image mai Publisher data bhjkr bhool jata hai ye subscriber ko dhyaan rkhna pdega ki ate hi phle subscribe kre taki usse event
+milje.
+
+pub/sub mai bhi channel hota jiske through data Publisher se current subscriber tk pahunch jata hai 
+ye one way communication hoti hai.
+
+issn image mai ek ecommerce website hai jisme koi item jb out of stockj hoti hai usme ek niche notify me ka option hota hai uspe 
+jb hum click krte hai mtlb humne kisi event ko subscribe krlia abh jb stock ayega toh Publisher current subscriber ko bhjdega ki 
+
+terminal kholo run kro command 
+
+docker khol kr engine chlao fr commands chlao 
+1. docker run -d -p 6379:6379 redis:latest
+2. docker ps // sare containers dikhenge 
+3. docker exec-it 86c8f054eaac redis-cli    // docker exec-it <container-id> redis-cli 
+abh hmaara redis khulgya 
+
+abh 4 terminal khole usme 2 se subscribe kiya 
+
+subscribe notify-me // 2terminal ne 
+PUBLISH notify-me "sneha" // 2 terminal ne 
+
+abh hum PUBLISH vale terminal ko bolte ki subscribe kro toh uske pass data ni aayega ok.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+abh iss folder k andr 3 folder bnaye 
+service1
+service2
+service3
+cd service1
+npm init -y
+npm install redis
+
+iss node js application ko redis se connect krna hai toh toh language hai redis  // run npm install redis 
+
+bnao server.js
+server ka redis se connect hona jruri hai agr connect nhi hoga toh pub/sub implement nhi hoga 
+
+cd service2
+npm init -y
+npm install redis
+
+//TOPIC 2 -> SINGLETON PATTERN (LOW LEVEL DESIGN)
+
+when we want only one object of a class to be created 
+example -> hmara school hai usme ek principal hota hai teacher student other afr in sbko koi bhi jankari cjhhaiye school se related toh vo principla k pass jaynege 
+agr 2 principal hai kujh 1 pr jaynege kujh dusre principal pr toh data glt ho skta hai 
+
+agr koi resource shared hai toh ek bnde pr control hai bki sb usko share krre hai. 
+//usage 
+
+1. database instance 
